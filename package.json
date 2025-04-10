@@ -20,6 +20,7 @@
     "deploy:ai-proxy": "cd cloudflare && wrangler deploy ai-proxy-worker.js",
     "deploy:backend": "cd cloudflare && wrangler deploy backend-worker.js --config backend-wrangler.toml",
     "deploy:direct-backend": "cd cloudflare && wrangler deploy direct-backend-worker.js --config direct-backend-wrangler.toml",
+    "deploy:beta-redirect": "cd cloudflare && wrangler deploy beta-redirect-worker.js --config beta-redirect-wrangler.toml",
     "deploy:pages": "npm run build:cloudflare && wrangler pages deploy dist"
   },
   "dependencies": {
