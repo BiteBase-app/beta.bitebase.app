@@ -11,9 +11,12 @@
     "build:no-auth": "vite build --config vite.config.ts --mode development",
     "build:standalone": "webpack --config webpack.standalone.js",
     "build:all": "npm run build && npm run build:standalone",
+    "build:vercel": "vite build",
+    "build:cloudflare": "node cloudflare-pages-setup.cjs && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy:cloudflare": "cd cloudflare && wrangler deploy"
+    "deploy:cloudflare": "cd cloudflare && wrangler deploy",
+    "deploy:pages": "npm run build:cloudflare && wrangler pages publish dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

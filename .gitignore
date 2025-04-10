@@ -34,13 +34,21 @@ NO_AUTH_MODE.md
 # Deployment
 render.yaml
 CLOUDFLARE_DEPLOYMENT.md
+CLOUDFLARE_PAGES_DEPLOYMENT.md
 RENDER_DEPLOYMENT.md
 VERCEL_DEPLOYMENT.md
 deploy-*.sh
 fix-build-deploy.sh
 build-for-vercel.sh
+build-with-bun.sh
+cloudflare-pages-build.sh
 vercel.json
 .vercel
+.vercelignore
+vercel-build-setup.js
+cloudflare-pages-setup.js
+cloudflare-pages.json
+cloudflare-pages.toml
 .env.production
 
 # Logs
