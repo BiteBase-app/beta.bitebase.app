@@ -1,0 +1,20 @@
+name = "bitebase-chatbot"
+main = "chatbot-worker.js"
+compatibility_date = "2023-10-30"
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"
+
+# Secrets (these will be set using wrangler secret commands)
+# wrangler secret put AI_GATEWAY_TOKEN
+
+# Configure routes
+routes = [
+  { pattern = "api.bitebase.ai/api/v1/chatbot/chat", zone_name = "bitebase.ai" },
+  { pattern = "api.bitebase.ai/api/v1/restaurant-profiles/", zone_name = "bitebase.ai" }
+]
+
+# Configure environment variables
+[vars]
+ENVIRONMENT = "production"
