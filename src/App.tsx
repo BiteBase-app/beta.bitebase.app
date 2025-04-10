@@ -20,6 +20,7 @@ import Reports from "./pages/Reports";
 import DataIntegration from "./pages/DataIntegration";
 import ApiTest from "./pages/ApiTest";
 import BiteBaseAIPage from "./pages/BiteBaseAIPage";
+import VercelBiteBaseAIPage from "./pages/VercelBiteBaseAIPage";
 import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
@@ -48,6 +49,7 @@ const App = () => (
             <Route path="/payment-canceled" element={<Dashboard />} />
             <Route path="/api-test" element={<ApiTest />} />
             <Route path="/ai-assistant" element={<BiteBaseAIPage />} />
+            <Route path="/vercel-ai" element={<VercelBiteBaseAIPage />} />
             <Route path="/settings" element={<Settings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

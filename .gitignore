@@ -35,8 +35,13 @@ NO_AUTH_MODE.md
 render.yaml
 CLOUDFLARE_DEPLOYMENT.md
 RENDER_DEPLOYMENT.md
+VERCEL_DEPLOYMENT.md
 deploy-*.sh
 fix-build-deploy.sh
+build-for-vercel.sh
+vercel.json
+.vercel
+.env.production
 
 # Logs
 logs
