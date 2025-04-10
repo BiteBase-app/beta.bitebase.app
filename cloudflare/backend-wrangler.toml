@@ -1,0 +1,12 @@
+name = "bitebase-backend"
+main = "backend-worker.js"
+compatibility_date = "2023-10-30"
+
+# Routes
+routes = [
+  { pattern = "api.bitebase.app/api/v1/*", zone_name = "bitebase.app" }
+]
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"

@@ -4,7 +4,7 @@ const path = require('path');
 
 // Create .env.production file
 const envContent = `VITE_APP_ENV=production
-VITE_API_URL=https://bitebase-ai-proxy.bitebase.workers.dev/api/v1
+VITE_API_URL=https://bitebase-backend.bitebase.workers.dev/api/v1
 `;
 
 fs.writeFileSync(path.join(__dirname, '.env.production'), envContent);

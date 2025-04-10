@@ -18,6 +18,7 @@
     "preview": "vite preview",
     "deploy:cloudflare": "cd cloudflare && wrangler deploy",
     "deploy:ai-proxy": "cd cloudflare && wrangler deploy ai-proxy-worker.js",
+    "deploy:backend": "cd cloudflare && wrangler deploy backend-worker.js --config backend-wrangler.toml",
     "deploy:pages": "npm run build:cloudflare && wrangler pages deploy dist"
   },
   "dependencies": {
