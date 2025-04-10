@@ -4,8 +4,7 @@ const path = require('path');
 
 // Create .env.production file
 const envContent = `VITE_APP_ENV=production
-VITE_API_URL=https://bitebase-chatbot.bitebase.workers.dev/api/v1
-VITE_CLOUDFLARE_AI_TOKEN=dIPwmSfU475UYmZaKivaQ-fhvt_jh6W8QaKxJ4d5
+VITE_API_URL=https://bitebase-ai-proxy.bitebase.workers.dev/api/v1
 `;
 
 fs.writeFileSync(path.join(__dirname, '.env.production'), envContent);
@@ -16,7 +15,7 @@ console.log('Created .env.production file');
 try {
   const packageJsonPath = path.join(__dirname, 'package.json');
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-  
+
   // Make sure axios is included
   if (!packageJson.dependencies.axios) {
     packageJson.dependencies.axios = '^1.8.4';

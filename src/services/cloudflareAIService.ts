@@ -5,14 +5,15 @@
 
 import axios from 'axios';
 
-// Cloudflare AI API URL
-const CLOUDFLARE_API_URL = 'https://api.cloudflare.com/client/v4/accounts/dc95c232d76cc4df23a5ca452a4046ab/ai/run';
+// Cloudflare AI API URL - Using our proxy to avoid CORS issues
+const CLOUDFLARE_API_URL = import.meta.env.VITE_API_URL ?
+  `${import.meta.env.VITE_API_URL}/ai/proxy` :
+  'https://bitebase-ai-proxy.bitebase.workers.dev/api/v1/ai/proxy';
 
 // Cloudflare AI model
 const DEFAULT_MODEL = '@cf/meta/llama-3-8b-instruct';
 
-// API token - should be stored in environment variables in production
-const API_TOKEN = import.meta.env.VITE_CLOUDFLARE_AI_TOKEN || 'dIPwmSfU475UYmZaKivaQ-fhvt_jh6W8QaKxJ4d5';
+// No need for API token in frontend as the proxy will handle authentication
 
 // Message interface
 export interface Message {
@@ -70,8 +71,9 @@ export async function chatCompletion(request: ChatCompletionRequest): Promise<Ch
     const model = request.model || DEFAULT_MODEL;
 
     const response = await axios.post(
-      `${CLOUDFLARE_API_URL}/${model}`,
+      CLOUDFLARE_API_URL,
       {
+        model: model,
         messages: request.messages,
         max_tokens: request.max_tokens || 500,
         temperature: request.temperature || 0.7,
@@ -79,7 +81,6 @@ export async function chatCompletion(request: ChatCompletionRequest): Promise<Ch
       {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_TOKEN}`,
         },
       }
     );
