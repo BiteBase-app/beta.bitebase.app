@@ -61,8 +61,15 @@ export function BiteBaseAI({ className = "" }: BiteBaseAIProps) {
 
       console.log('Sending request to backend with messages:', aiMessages);
 
+      // Get the API URL from environment variables or use the default
+      const apiUrl = import.meta.env.VITE_API_URL ?
+        `${import.meta.env.VITE_API_URL}/cloudflare-ai/chat` :
+        'https://bitebase-direct-backend.bitebase.workers.dev/cloudflare-ai/chat';
+
+      console.log('Using API URL:', apiUrl);
+
       // Call our backend proxy to Cloudflare AI
-      const response = await axios.post('/api/v1/cloudflare-ai/chat', {
+      const response = await axios.post(apiUrl, {
         messages: aiMessages
       });
 
