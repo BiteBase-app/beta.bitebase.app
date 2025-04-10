@@ -1,17 +1,6 @@
-name = "bitebase-chatbot"
-main = "chatbot-worker.js"
+name = "bitebase-app"
 compatibility_date = "2023-10-30"
 
-# Environment variables
-[vars]
-ENVIRONMENT = "production"
-
-# Secrets (these will be set using wrangler secret commands)
-# wrangler secret put AI_GATEWAY_TOKEN
-
-# Configure routes
-routes = [
-  { pattern = "api.bitebase.app/api/v1/chatbot/chat", zone_name = "bitebase.app" },
-  { pattern = "api.bitebase.app/api/v1/restaurant-profiles/", zone_name = "bitebase.app" }
-]
+# Specify the build output directory for Pages
+pages_build_output_dir = "dist"
 
