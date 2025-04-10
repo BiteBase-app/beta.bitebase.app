@@ -20,6 +20,24 @@ build
 .env.production.local
 .env.deploy
 
+# No-Auth Mode
+.no-auth-token
+no-auth-*.log
+run-no-auth*.sh
+backend/no_auth_api.py
+src/no-auth-*.tsx
+src/hooks/useNoAuth.ts
+src/contexts/NoAuthContext.tsx
+src/services/no-auth-api.ts
+NO_AUTH_MODE.md
+
+# Deployment
+render.yaml
+CLOUDFLARE_DEPLOYMENT.md
+RENDER_DEPLOYMENT.md
+deploy-*.sh
+fix-build-deploy.sh
+
 # Logs
 logs
 *.log

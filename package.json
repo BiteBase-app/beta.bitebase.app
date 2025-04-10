@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:no-auth": "vite --config vite.config.ts --mode development",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "build:no-auth": "vite build --config vite.config.ts --mode development",
     "build:standalone": "webpack --config webpack.standalone.js",
     "build:all": "npm run build && npm run build:standalone",
     "lint": "eslint .",
