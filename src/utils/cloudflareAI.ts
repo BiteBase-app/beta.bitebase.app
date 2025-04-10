@@ -14,7 +14,7 @@ export interface Message {
 }
 
 /**
- * Call Cloudflare AI API directly
+ * Call Cloudflare AI API via our backend proxy
  * @param messages Array of messages
  * @param model Model to use
  * @returns AI response text
@@ -24,23 +24,27 @@ export async function callCloudflareAI(
   model: string = DEFAULT_MODEL
 ): Promise<string> {
   try {
-    console.log(`Calling Cloudflare AI API with model: ${model}`);
-    
-    const response = await fetch(
-      `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run/${model}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${CLOUDFLARE_API_TOKEN}`,
-        },
-        body: JSON.stringify({ messages }),
-      }
-    );
-    
+    console.log(`Calling Cloudflare AI API via proxy with model: ${model}`);
+
+    // Get the API URL from environment variables or use the default
+    const apiUrl = import.meta.env.VITE_API_URL ?
+      `${import.meta.env.VITE_API_URL}/chat` :
+      'https://bitebase-direct-backend.bitebase.workers.dev/chat';
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        messages,
+        model
+      }),
+    });
+
     const data = await response.json();
     console.log('Cloudflare AI API response:', data);
-    
+
     if (data.success && data.result?.response) {
       return data.result.response;
     } else {
@@ -68,21 +72,21 @@ export async function createChatCompletionWithContext(
 You help with market research, location analysis, competitive analysis, and business strategy.
 You have access to restaurant data, market trends, and location intelligence.
 Be concise, professional, and helpful. If you don't know something, say so and suggest how the user might find that information.`;
-    
+
     // Prepare messages array
     const apiMessages: Message[] = [
       { role: 'system', content: systemPrompt }
     ];
-    
+
     // Add restaurant context if available
     if (restaurantProfileId) {
       const restaurantContext = `The user is asking about restaurant with ID ${restaurantProfileId}.`;
       apiMessages.push({ role: 'system', content: restaurantContext });
     }
-    
+
     // Add conversation messages
     apiMessages.push(...messages);
-    
+
     // Call Cloudflare AI API
     return await callCloudflareAI(apiMessages);
   } catch (error) {

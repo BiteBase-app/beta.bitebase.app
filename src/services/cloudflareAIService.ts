@@ -7,8 +7,8 @@ import axios from 'axios';
 
 // Cloudflare AI API URL - Using our proxy to avoid CORS issues
 const CLOUDFLARE_API_URL = import.meta.env.VITE_API_URL ?
-  `${import.meta.env.VITE_API_URL}/ai/proxy` :
-  'https://bitebase-ai-proxy.bitebase.workers.dev/api/v1/ai/proxy';
+  `${import.meta.env.VITE_API_URL}/chat` :
+  'https://bitebase-direct-backend.bitebase.workers.dev/chat';
 
 // Cloudflare AI model
 const DEFAULT_MODEL = '@cf/meta/llama-3-8b-instruct';

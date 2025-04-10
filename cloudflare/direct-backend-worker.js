@@ -1,8 +1,9 @@
 /**
- * BiteBase Backend Worker
- *
+ * BiteBase Backend Worker (Direct Version)
+ * 
  * This worker serves as the backend API for the BiteBase application.
  * It provides endpoints for interacting with the Cloudflare AI API.
+ * This version is designed to be accessed directly via the workers.dev domain.
  */
 
 // Cloudflare AI API details
@@ -38,19 +39,19 @@ async function handleHealthCheck() {
   });
 }
 
-// Test endpoint (equivalent to the Python test_endpoint)
+// Test endpoint
 async function handleTestEndpoint() {
   try {
     // Call Cloudflare AI API
     const cloudflareUrl = `https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/bitebase-ai-agents/ai/run/${DEFAULT_MODEL}`;
-
+    
     const payload = {
       messages: [
         { role: 'system', content: 'You are a helpful assistant.' },
         { role: 'user', content: 'Hello, how are you?' }
       ]
     };
-
+    
     const response = await fetch(cloudflareUrl, {
       method: 'POST',
       headers: {
@@ -59,7 +60,7 @@ async function handleTestEndpoint() {
       },
       body: JSON.stringify(payload)
     });
-
+    
     if (response.status === 200) {
       const responseData = await response.json();
       return new Response(JSON.stringify(responseData), {
@@ -72,8 +73,8 @@ async function handleTestEndpoint() {
     } else {
       const errorText = await response.text();
       return new Response(
-        JSON.stringify({
-          error: `Cloudflare API returned status code ${response.status}: ${errorText}`
+        JSON.stringify({ 
+          error: `Cloudflare AI API returned status code ${response.status}: ${errorText}` 
         }), {
           headers: {
             ...corsHeaders,
@@ -102,10 +103,10 @@ async function handleChatEndpoint(request) {
     // Parse the request body
     const data = await request.json();
     const messages = data.messages || [];
-
+    
     // Call Cloudflare AI API
     const cloudflareUrl = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run/${DEFAULT_MODEL}`;
-
+    
     const response = await fetch(cloudflareUrl, {
       method: 'POST',
       headers: {
@@ -116,10 +117,10 @@ async function handleChatEndpoint(request) {
         messages: messages
       })
     });
-
+    
     if (response.status === 200) {
       const responseData = await response.json();
-
+      
       // Format the response to match what the frontend expects
       const formattedResponse = {
         success: true,
@@ -127,7 +128,7 @@ async function handleChatEndpoint(request) {
           response: responseData.result?.response || responseData.result?.content || "I'm sorry, I couldn't generate a response."
         }
       };
-
+      
       return new Response(JSON.stringify(formattedResponse), {
         headers: {
           ...corsHeaders,
@@ -171,40 +172,40 @@ async function handleRequest(request) {
   // Get the request URL
   const url = new URL(request.url);
   const path = url.pathname;
-
+  
   // Handle CORS preflight requests for all paths
   if (request.method === 'OPTIONS') {
     return handleOptions(request);
   }
-
+  
   // Log the request for debugging
   console.log(`Handling ${request.method} request to ${path}`);
-
+  
   try {
     // Route requests to the appropriate handler
     let response;
-
-    if (path === '/api/v1/health' && request.method === 'GET') {
+    
+    if (path === '/health' || path === '/api/v1/health') {
       response = await handleHealthCheck();
-    } else if (path === '/api/v1/test' && request.method === 'GET') {
+    } else if (path === '/test' || path === '/api/v1/test') {
       response = await handleTestEndpoint();
-    } else if ((path === '/api/v1/cloudflare-ai/chat' || path === '/api/v1/ai/proxy') && request.method === 'POST') {
+    } else if (path === '/chat' || path === '/api/v1/cloudflare-ai/chat' || path === '/api/v1/ai/proxy') {
       response = await handleChatEndpoint(request);
     } else {
-      response = new Response(JSON.stringify({ error: 'Not found' }), {
+      response = new Response(JSON.stringify({ error: 'Not found', path: path }), {
         headers: {
           'Content-Type': 'application/json',
         },
         status: 404,
       });
     }
-
+    
     // Clone the response and add CORS headers to ensure they're present
     const corsResponse = new Response(response.body, response);
     Object.keys(corsHeaders).forEach(key => {
       corsResponse.headers.set(key, corsHeaders[key]);
     });
-
+    
     return corsResponse;
   } catch (error) {
     console.error(`Error handling request: ${error.message}`);

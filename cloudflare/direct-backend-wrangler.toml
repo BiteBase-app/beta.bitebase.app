@@ -1,0 +1,7 @@
+name = "bitebase-direct-backend"
+main = "direct-backend-worker.js"
+compatibility_date = "2023-10-30"
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"
