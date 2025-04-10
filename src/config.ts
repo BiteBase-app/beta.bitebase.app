@@ -22,8 +22,8 @@ const configs: Record<Environment, ApiConfig> = {
     chatbotUrl: 'https://bitebase-chatbot.your-subdomain.workers.dev/api/v1/chatbot/chat',
   },
   production: {
-    baseUrl: 'https://api.bitebase.ai/api/v1',
-    chatbotUrl: 'https://api.bitebase.ai/api/v1/chatbot/chat',
+    baseUrl: 'https://api.bitebase.app/api/v1',
+    chatbotUrl: 'https://api.bitebase.app/api/v1/chatbot/chat',
   },
 };
 

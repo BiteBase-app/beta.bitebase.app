@@ -11,10 +11,7 @@ ENVIRONMENT = "production"
 
 # Configure routes
 routes = [
-  { pattern = "api.bitebase.ai/api/v1/chatbot/chat", zone_name = "bitebase.ai" },
-  { pattern = "api.bitebase.ai/api/v1/restaurant-profiles/", zone_name = "bitebase.ai" }
+  { pattern = "api.bitebase.app/api/v1/chatbot/chat", zone_name = "bitebase.app" },
+  { pattern = "api.bitebase.app/api/v1/restaurant-profiles/", zone_name = "bitebase.app" }
 ]
 
-# Configure environment variables
-[vars]
-ENVIRONMENT = "production"

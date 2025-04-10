@@ -43,4 +43,4 @@ echo "Initializing the database..."
 docker-compose -f docker-compose.prod.yml exec backend python -m app.initial_data
 
 echo "Deployment completed successfully!"
-echo "The application is now running at https://bitebase.example.com"
+echo "The application is now running at https://bitebase.app"
