@@ -91,9 +91,20 @@ export function BiteBaseAI({ className = "" }: BiteBaseAIProps) {
       console.error('Error sending message:', error);
       console.error('Error details:', error.response?.data || error.message);
 
+      // Add a fallback AI response to the chat
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: "I'm sorry, I'm having trouble connecting to my services right now. Please try again in a moment.",
+          timestamp: new Date()
+        }
+      ]);
+
+      // Show a toast notification
       toast({
-        title: "Error",
-        description: `Failed to get a response: ${error.response?.data?.error || error.message || 'Unknown error'}`,
+        title: "Connection Issue",
+        description: "There was a problem connecting to the AI service. Please try again later.",
         variant: "destructive",
       });
     } finally {
