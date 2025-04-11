@@ -118,46 +118,63 @@ async function handleChatEndpoint(request) {
     console.log('Request data:', JSON.stringify(data));
 
     const messages = data.messages || [];
-    const model = data.model || DEFAULT_MODEL;
 
-    // Call Cloudflare AI API
-    // Try both API endpoints to ensure compatibility
-    const cloudflareUrl = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run/${model}`;
+    // Call Cloudflare AI Gateway API
+    const cloudflareUrl = `https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/bitebase-bot`;
+
+    // Prepare the request body for Cloudflare AI Gateway
+    const requestBody = [
+      {
+        "provider": "workers-ai",
+        "endpoint": "@cf/meta/llama-3.1-8b-instruct",
+        "headers": {
+          "Authorization": `Bearer ${CLOUDFLARE_API_TOKEN}`,
+          "Content-Type": "application/json"
+        },
+        "query": {
+          "messages": messages
+        }
+      }
+    ];
+
+    console.log('Request body:', JSON.stringify(requestBody));
 
     const response = await fetch(cloudflareUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${CLOUDFLARE_API_TOKEN}`
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        messages: messages
-      })
+      body: JSON.stringify(requestBody)
     });
 
     if (response.status === 200) {
       const responseData = await response.json();
       console.log('Raw API response:', JSON.stringify(responseData));
 
-      // Extract the response content based on different possible response formats
+      // Extract the response content from the Cloudflare AI Gateway response
       let responseContent = "I'm sorry, I couldn't generate a response.";
 
-      // Handle different response formats
-      if (responseData.result?.response) {
-        responseContent = responseData.result.response;
-      } else if (responseData.result?.content) {
-        responseContent = responseData.result.content;
-      } else if (responseData.response) {
-        responseContent = responseData.response;
-      } else if (responseData.result?.text) {
-        responseContent = responseData.result.text;
-      } else if (typeof responseData.result === 'string') {
-        responseContent = responseData.result;
-      } else if (responseData.success && responseData.result) {
-        // Try to extract content from nested objects
-        const resultObj = responseData.result;
-        if (resultObj.choices && resultObj.choices[0]?.message?.content) {
-          responseContent = resultObj.choices[0].message.content;
+      // The response is an array with results from each provider
+      if (Array.isArray(responseData) && responseData.length > 0) {
+        const firstResult = responseData[0];
+
+        // Handle workers-ai provider response
+        if (firstResult.provider === 'workers-ai') {
+          if (firstResult.response?.result?.response) {
+            responseContent = firstResult.response.result.response;
+          } else if (firstResult.response?.result?.content) {
+            responseContent = firstResult.response.result.content;
+          } else if (firstResult.response?.content) {
+            responseContent = firstResult.response.content;
+          } else if (firstResult.response?.text) {
+            responseContent = firstResult.response.text;
+          }
+        }
+        // Handle openai provider response
+        else if (firstResult.provider === 'openai') {
+          if (firstResult.response?.choices && firstResult.response.choices[0]?.message?.content) {
+            responseContent = firstResult.response.choices[0].message.content;
+          }
         }
       }
 
