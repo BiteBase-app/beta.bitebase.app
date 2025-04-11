@@ -10,6 +10,7 @@
 const CLOUDFLARE_ACCOUNT_ID = 'dc95c232d76cc4df23a5ca452a4046ab';
 const CLOUDFLARE_API_TOKEN = 'dIPwmSfU475UYmZaKivaQ-fhvt_jh6W8QaKxJ4d5';
 const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct';
+const MATH_MODEL = '@cf/deepseek-ai/deepseek-math-7b-instruct';
 const AUTORAG_TOKEN = '3TPrSyeZqreSql6km6VL9jCrYVov2okIaVeVEb_N';
 const AUTORAG_ID = 'sparkling-mountain-4026';
 
@@ -39,6 +40,140 @@ async function handleHealthCheck() {
     },
     status: 200,
   });
+}
+
+// Math query endpoint
+async function handleMathQuery(request) {
+  try {
+    console.log('Handling math query request');
+
+    // Parse the request body
+    const data = await request.json();
+    console.log('Request data:', JSON.stringify(data));
+
+    const messages = data.messages || [];
+
+    // Call Cloudflare AI Gateway API with direct provider endpoint for math model
+    const cloudflareUrl = `https://gateway.ai.cloudflare.com/v1/${CLOUDFLARE_ACCOUNT_ID}/bitebase-bot/workers-ai/${MATH_MODEL}`;
+
+    // Convert chat messages to prompt format if needed
+    let requestBody;
+    if (messages.length > 0) {
+      // If we have chat messages, use them directly
+      requestBody = {
+        messages: messages
+      };
+    } else {
+      // Fallback to a default prompt
+      requestBody = {
+        prompt: "Solve this math problem: 2 + 2"
+      };
+    }
+
+    console.log('Request body:', JSON.stringify(requestBody));
+
+    const response = await fetch(cloudflareUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${CLOUDFLARE_API_TOKEN}`
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (response.status === 200) {
+      const responseData = await response.json();
+      console.log('Raw API response:', JSON.stringify(responseData));
+
+      // Extract the response content from the direct provider endpoint response
+      let responseContent = "I'm sorry, I couldn't generate a response.";
+
+      // Handle different response formats
+      if (responseData.response) {
+        responseContent = responseData.response;
+      } else if (responseData.result?.response) {
+        responseContent = responseData.result.response;
+      } else if (responseData.result?.content) {
+        responseContent = responseData.result.content;
+      } else if (responseData.content) {
+        responseContent = responseData.content;
+      } else if (responseData.text) {
+        responseContent = responseData.text;
+      } else if (responseData.choices && responseData.choices[0]?.message?.content) {
+        responseContent = responseData.choices[0].message.content;
+      }
+
+      // Format the response to match what the frontend expects
+      const formattedResponse = {
+        success: true,
+        result: {
+          response: responseContent
+        }
+      };
+
+      return new Response(JSON.stringify(formattedResponse), {
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
+        status: 200,
+      });
+    } else {
+      // Try to parse the error response as JSON
+      let errorText;
+      try {
+        const errorJson = await response.json();
+        errorText = JSON.stringify(errorJson);
+        console.error('Error response from Cloudflare AI API:', errorJson);
+      } catch (e) {
+        // If it's not JSON, get it as text
+        errorText = await response.text();
+        console.error('Error response from Cloudflare AI API (text):', errorText);
+      }
+
+      // Create a fallback response with a helpful message
+      const fallbackResponse = {
+        success: true,
+        result: {
+          response: "I'm sorry, I'm having trouble solving this math problem right now. Please try again in a moment."
+        }
+      };
+
+      console.log('Using fallback response due to API error');
+
+      // Return the fallback response instead of an error
+      return new Response(
+        JSON.stringify(fallbackResponse), {
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+          },
+          status: 200, // Return 200 OK with a fallback message instead of an error
+        }
+      );
+    }
+  } catch (error) {
+    console.error('Unexpected error in math query endpoint:', error);
+
+    // Create a fallback response with a helpful message
+    const fallbackResponse = {
+      success: true,
+      result: {
+        response: "I'm sorry, I encountered an unexpected error while solving this math problem. Please try again in a moment."
+      }
+    };
+
+    // Return a user-friendly response instead of exposing the error
+    return new Response(
+      JSON.stringify(fallbackResponse), {
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
+        status: 200, // Return 200 OK with a fallback message
+      }
+    );
+  }
 }
 
 // AutoRAG search endpoint
@@ -361,6 +496,13 @@ async function handleRequest(request) {
       path === '/autorag/search'
     ) {
       response = await handleAutoRagSearch(request);
+    } else if (
+      path === '/math' ||
+      path === '/api/v1/math' ||
+      path === '/api/v1/math/solve' ||
+      path === '/math/solve'
+    ) {
+      response = await handleMathQuery(request);
     } else {
       response = new Response(JSON.stringify({ error: 'Not found', path: path }), {
         headers: {

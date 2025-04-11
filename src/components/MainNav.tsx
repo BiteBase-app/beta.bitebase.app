@@ -25,6 +25,10 @@ export function MainNav({ className, ...props }: MainNavProps) {
       label: "Knowledge Search",
     },
     {
+      href: "/math",
+      label: "Math Solver",
+    },
+    {
       href: "/settings",
       label: "Settings",
     },

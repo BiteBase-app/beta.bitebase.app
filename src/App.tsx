@@ -22,6 +22,7 @@ import ApiTest from "./pages/ApiTest";
 import BiteBaseAIPage from "./pages/BiteBaseAIPage";
 import VercelBiteBaseAIPage from "./pages/VercelBiteBaseAIPage";
 import AutoRagSearchPage from "./pages/AutoRagSearchPage";
+import MathSolverPage from "./pages/MathSolverPage";
 import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
@@ -52,6 +53,7 @@ const App = () => (
             <Route path="/ai-assistant" element={<BiteBaseAIPage />} />
             <Route path="/vercel-ai" element={<VercelBiteBaseAIPage />} />
             <Route path="/autorag" element={<AutoRagSearchPage />} />
+            <Route path="/math" element={<MathSolverPage />} />
             <Route path="/settings" element={<Settings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
