@@ -93,9 +93,21 @@ export const ChatBot: React.FC<ChatBotProps> = ({
       ]);
     } catch (error) {
       console.error('Error sending message:', error);
+
+      // Add a fallback AI response to the chat
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: "I'm sorry, I'm having trouble connecting to my services right now. Please try again in a moment.",
+          timestamp: new Date()
+        }
+      ]);
+
+      // Show a toast notification
       toast({
-        title: "Error",
-        description: "Failed to get a response from the assistant. Please try again.",
+        title: "Connection Issue",
+        description: "There was a problem connecting to the AI service. Please try again later.",
         variant: "destructive",
       });
     } finally {
