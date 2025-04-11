@@ -6,10 +6,12 @@
  * This version is designed to be accessed directly via the workers.dev domain.
  */
 
-// Cloudflare AI API details
+// Cloudflare API details
 const CLOUDFLARE_ACCOUNT_ID = 'dc95c232d76cc4df23a5ca452a4046ab';
 const CLOUDFLARE_API_TOKEN = 'dIPwmSfU475UYmZaKivaQ-fhvt_jh6W8QaKxJ4d5';
-const DEFAULT_MODEL = '@cf/meta/llama-3-8b-instruct';
+const DEFAULT_MODEL = '@cf/meta/llama-3.1-8b-instruct';
+const AUTORAG_TOKEN = '3TPrSyeZqreSql6km6VL9jCrYVov2okIaVeVEb_N';
+const AUTORAG_ID = 'sparkling-mountain-4026';
 
 // CORS headers to allow requests from any origin
 const corsHeaders = {
@@ -37,6 +39,91 @@ async function handleHealthCheck() {
     },
     status: 200,
   });
+}
+
+// AutoRAG search endpoint
+async function handleAutoRagSearch(request) {
+  try {
+    console.log('Handling AutoRAG search request');
+
+    // Parse the request body
+    const data = await request.json();
+    console.log('Request data:', JSON.stringify(data));
+
+    const query = data.query || '';
+
+    // Call Cloudflare AutoRAG API
+    const autoRagUrl = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/autorag/rags/${AUTORAG_ID}/ai-search`;
+
+    const response = await fetch(autoRagUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${AUTORAG_TOKEN}`
+      },
+      body: JSON.stringify({
+        query: query
+      })
+    });
+
+    if (response.status === 200) {
+      const responseData = await response.json();
+      console.log('Raw AutoRAG API response:', JSON.stringify(responseData));
+
+      // Format the response to match what the frontend expects
+      const formattedResponse = {
+        success: true,
+        result: responseData
+      };
+
+      return new Response(JSON.stringify(formattedResponse), {
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
+        status: 200,
+      });
+    } else {
+      // Try to parse the error response as JSON
+      let errorText;
+      try {
+        const errorJson = await response.json();
+        errorText = JSON.stringify(errorJson);
+        console.error('Error response from AutoRAG API:', errorJson);
+      } catch (e) {
+        // If it's not JSON, get it as text
+        errorText = await response.text();
+        console.error('Error response from AutoRAG API (text):', errorText);
+      }
+
+      // Create a fallback response with a helpful message
+      const fallbackResponse = {
+        success: false,
+        error: `AutoRAG API returned status code ${response.status}: ${errorText}`
+      };
+
+      return new Response(JSON.stringify(fallbackResponse), {
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
+        status: 200, // Return 200 OK with error details
+      });
+    }
+  } catch (error) {
+    console.error('Unexpected error in AutoRAG search endpoint:', error);
+
+    return new Response(JSON.stringify({
+      success: false,
+      error: `Error processing AutoRAG search: ${error.message}`
+    }), {
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+      },
+      status: 500,
+    });
+  }
 }
 
 // Test endpoint
@@ -267,6 +354,13 @@ async function handleRequest(request) {
       path === '/ai/proxy'
     ) {
       response = await handleChatEndpoint(request);
+    } else if (
+      path === '/autorag' ||
+      path === '/api/v1/autorag' ||
+      path === '/api/v1/autorag/search' ||
+      path === '/autorag/search'
+    ) {
+      response = await handleAutoRagSearch(request);
     } else {
       response = new Response(JSON.stringify({ error: 'Not found', path: path }), {
         headers: {
