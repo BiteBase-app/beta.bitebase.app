@@ -10,11 +10,11 @@ body {
   .text-balance {
     text-wrap: balance;
   }
-  
+
   .glass {
     @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-lg;
   }
-  
+
   .text-gradient {
     @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
   }
@@ -32,21 +32,21 @@ body {
     --primary-foreground: 0 0% 98%;
     --secondary: 173 58% 39%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 96.1%;
+    --muted: 0 0% 98%;
     --muted-foreground: 0 0% 45.1%;
     --accent: 16 100% 95%;
     --accent-foreground: 16 100% 45%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
+    --border: 0 0% 92%;
+    --input: 0 0% 92%;
     --ring: 16 100% 60%;
     --chart-1: 16 100% 60%;
     --chart-2: 173 58% 39%;
     --chart-3: 217 33% 17%;
     --chart-4: 39 100% 77%;
     --chart-5: 16 78% 55%;
-    --radius: 0.5rem;
+    --radius: 0.4rem;
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 16 100% 60%;
@@ -105,23 +105,23 @@ body {
   .heading-1 {
     @apply text-4xl font-bold tracking-tight text-foreground sm:text-5xl;
   }
-  
+
   .heading-2 {
     @apply text-3xl font-bold tracking-tight text-foreground sm:text-4xl;
   }
-  
+
   .heading-3 {
     @apply text-2xl font-bold tracking-tight text-foreground sm:text-3xl;
   }
-  
+
   .subtitle {
     @apply text-xl text-muted-foreground;
   }
-  
+
   .card-hover {
     @apply transition-all duration-200 hover:shadow-md hover:-translate-y-1;
   }
-  
+
   .gradient-text {
     @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
   }

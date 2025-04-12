@@ -113,38 +113,38 @@ export function BiteBaseAI({ className = "" }: BiteBaseAIProps) {
   };
 
   return (
-    <Card className={`flex flex-col h-[600px] ${className}`}>
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <Bot className="mr-2 h-5 w-5" />
+    <Card className={`flex flex-col h-[600px] ${className} overflow-hidden border-border/60`}>
+      <CardHeader className="bg-muted/50 border-b border-border/30 py-3">
+        <CardTitle className="text-lg flex items-center gap-2">
+          <span className="bg-primary/10 p-1.5 rounded-md">
+            <Bot className="h-4 w-4 text-primary" />
+          </span>
           BiteBase AI Assistant
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 overflow-y-auto">
+      <CardContent className="flex-1 overflow-y-auto p-4">
         <div className="space-y-4">
           {messages.map((message, index) => (
             <div
               key={index}
               className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
-              <div className="flex items-start gap-2 max-w-[80%]">
+              <div className="flex items-start gap-2 max-w-[85%]">
                 {message.role !== 'user' && (
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-primary text-primary-foreground">
-                      <Bot className="h-4 w-4" />
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="h-8 w-8 rounded-full flex items-center justify-center bg-secondary/10 text-secondary flex-shrink-0">
+                    <Bot className="h-4 w-4" />
+                  </div>
                 )}
                 <div
-                  className={`rounded-lg px-3 py-2 ${
+                  className={`rounded-lg px-3 py-2 shadow-sm ${
                     message.role === 'user'
-                      ? 'bg-primary text-primary-foreground'
-                      : 'bg-muted'
+                      ? 'bg-primary/90 text-primary-foreground'
+                      : 'bg-muted border border-border/40'
                   }`}
                 >
-                  <p className="whitespace-pre-wrap">{message.content}</p>
+                  <p className="whitespace-pre-wrap text-sm">{message.content}</p>
                   {message.timestamp && (
-                    <p className="text-xs opacity-50 mt-1">
+                    <p className="text-[10px] opacity-70 mt-1 text-right">
                       {message.timestamp.toLocaleTimeString([], {
                         hour: '2-digit',
                         minute: '2-digit'
@@ -153,25 +153,24 @@ export function BiteBaseAI({ className = "" }: BiteBaseAIProps) {
                   )}
                 </div>
                 {message.role === 'user' && (
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-primary text-primary-foreground">
-                      <User className="h-4 w-4" />
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="h-8 w-8 rounded-full flex items-center justify-center bg-primary/10 text-primary flex-shrink-0">
+                    <User className="h-4 w-4" />
+                  </div>
                 )}
               </div>
             </div>
           ))}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="flex items-start gap-2 max-w-[80%]">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-primary text-primary-foreground">
-                    <Bot className="h-4 w-4" />
-                  </AvatarFallback>
-                </Avatar>
-                <div className="rounded-lg px-3 py-2 bg-muted">
-                  <Loader2 className="h-4 w-4 animate-spin" />
+              <div className="flex items-start gap-2 max-w-[85%]">
+                <div className="h-8 w-8 rounded-full flex items-center justify-center bg-secondary/10 text-secondary flex-shrink-0">
+                  <Bot className="h-4 w-4" />
+                </div>
+                <div className="rounded-lg px-3 py-2 bg-muted border border-border/40 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    <span className="text-xs text-muted-foreground">Thinking...</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -179,22 +178,38 @@ export function BiteBaseAI({ className = "" }: BiteBaseAIProps) {
           <div ref={messagesEndRef} />
         </div>
       </CardContent>
-      <CardFooter className="border-t p-4">
+      <CardFooter className="border-t border-border/30 p-3 bg-muted/30">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleSendMessage();
           }}
-          className="flex w-full gap-2"
+          className="flex w-full gap-2 items-center"
         >
-          <Input
-            placeholder="Type your message..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={isLoading}
-            className="flex-1"
-          />
-          <Button type="submit" size="icon" disabled={isLoading || !input.trim()}>
+          <div className="relative flex-1">
+            <Input
+              placeholder="Type your message..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={isLoading}
+              className="pr-10"
+            />
+            {input && (
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                onClick={() => setInput('')}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+              </button>
+            )}
+          </div>
+          <Button
+            type="submit"
+            size="icon"
+            disabled={isLoading || !input.trim()}
+            className="h-9 w-9 rounded-full"
+          >
             <Send className="h-4 w-4" />
           </Button>
         </form>
