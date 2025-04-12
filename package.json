@@ -21,7 +21,10 @@
     "deploy:backend": "cd cloudflare && wrangler deploy backend-worker.js --config backend-wrangler.toml",
     "deploy:direct-backend": "cd cloudflare && wrangler deploy direct-backend-worker.js --config direct-backend-wrangler.toml",
     "deploy:beta-redirect": "cd cloudflare && wrangler deploy beta-redirect-worker.js --config beta-redirect-wrangler.toml",
-    "deploy:pages": "npm run build:cloudflare && wrangler pages deploy dist"
+    "deploy:pages": "npm run build:cloudflare && wrangler pages deploy dist",
+    "trigger:dev": "trigger dev",
+    "trigger:deploy": "trigger deploy",
+    "trigger:logs": "trigger logs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -54,6 +57,7 @@
     "@radix-ui/react-tooltip": "^1.1.4",
     "@supabase/supabase-js": "^2.49.4",
     "@tanstack/react-query": "^5.56.2",
+    "@trigger.dev/sdk": "^3.3.17",
     "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -69,6 +73,8 @@
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
+    "react-helmet": "^6.1.0",
+    "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.53.0",
     "react-map-gl": "^8.0.2",
     "react-resizable-panels": "^2.1.3",
@@ -83,6 +89,7 @@
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@tailwindcss/typography": "^0.5.15",
+    "@trigger.dev/build": "^3.3.17",
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
