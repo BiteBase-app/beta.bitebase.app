@@ -35,6 +35,8 @@ import {
   MessageSquare,
   Sparkles,
   Zap,
+  Brain,
+  CreditCard,
 } from "lucide-react";
 import { useTier } from "@/contexts/TierContext";
 
@@ -48,6 +50,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const mainNavItems = [
     { name: "Dashboard", href: "/dashboard", icon: BarChart2 },
+    { name: "Restaurant Intelligence", href: "/intelligence", icon: Brain },
     { name: "Market Research", href: "/research", icon: Search },
     { name: "Location Analysis", href: "/location", icon: MapPin },
     { name: "Market Intelligence", href: "/competitive-analysis", icon: UserPlus },
@@ -55,6 +58,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Reports", href: "/reports", icon: FileText },
     { name: "Data Integration", href: "/data-integration", icon: Database },
     { name: "AI Assistant", href: "/ai-assistant", icon: Bot },
+    { name: "Pricing", href: "/pricing", icon: CreditCard },
     { name: "Settings", href: "/settings", icon: SettingsIcon },
   ];
 

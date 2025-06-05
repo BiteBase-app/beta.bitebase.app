@@ -11,6 +11,8 @@ from app.api.api_v1.endpoints import (
     analytics,
     chatbot,
     mock_data,
+    restaurant_intelligence,
+    subscriptions,
 )
 
 api_router = APIRouter()
@@ -30,3 +32,9 @@ api_router.include_router(location.router, prefix="/location", tags=["location"]
 api_router.include_router(analytics.router, prefix="/analytics", tags=["analytics"])
 api_router.include_router(chatbot.router, prefix="/chatbot", tags=["chatbot"])
 api_router.include_router(mock_data.router, prefix="/mock", tags=["mock"])
+api_router.include_router(
+    restaurant_intelligence.router, prefix="/intelligence", tags=["restaurant intelligence"]
+)
+api_router.include_router(
+    subscriptions.router, prefix="/subscriptions", tags=["subscriptions"]
+)

@@ -24,6 +24,8 @@ import VercelBiteBaseAIPage from "./pages/VercelBiteBaseAIPage";
 import AutoRagSearchPage from "./pages/AutoRagSearchPage";
 import MathSolverPage from "./pages/MathSolverPage";
 import Settings from "./pages/Settings";
+import RestaurantIntelligence from "./pages/RestaurantIntelligence";
+import Pricing from "./pages/Pricing";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +57,8 @@ const App = () => (
             <Route path="/autorag" element={<AutoRagSearchPage />} />
             <Route path="/math" element={<MathSolverPage />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/intelligence" element={<RestaurantIntelligence />} />
+            <Route path="/pricing" element={<Pricing />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
