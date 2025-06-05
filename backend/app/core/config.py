@@ -77,6 +77,11 @@ class Settings(BaseSettings):
     OPENAI_MODEL: str = "gpt-4"
     LANGCHAIN_TRACING_V2: bool = False
     LANGCHAIN_API_KEY: Optional[str] = None
+    
+    # Stripe Configuration
+    STRIPE_SECRET_KEY: Optional[str] = None
+    STRIPE_PUBLISHABLE_KEY: Optional[str] = None
+    STRIPE_WEBHOOK_SECRET: Optional[str] = None
 
     # Redis
     REDIS_HOST: str = "localhost"

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
+import { SubscriptionManager } from "@/components/SubscriptionManager";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -77,6 +78,7 @@ const Settings = () => {
         <Tabs defaultValue="general" value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="mb-6">
             <TabsTrigger value="general">General</TabsTrigger>
+            <TabsTrigger value="subscription">Subscription</TabsTrigger>
             <TabsTrigger value="api">API Configuration</TabsTrigger>
             <TabsTrigger value="ai">AI Settings</TabsTrigger>
           </TabsList>
@@ -122,6 +124,10 @@ const Settings = () => {
                 <Button onClick={handleSaveGeneral}>Save Changes</Button>
               </CardFooter>
             </Card>
+          </TabsContent>
+          
+          <TabsContent value="subscription">
+            <SubscriptionManager />
           </TabsContent>
           
           <TabsContent value="api">

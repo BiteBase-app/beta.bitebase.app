@@ -11,7 +11,7 @@ import {
   CreditCard, 
   CheckCircle, 
   AlertTriangle, 
-  Sync, 
+  RefreshCw, 
   BarChart3, 
   TrendingUp,
   ShoppingCart,
@@ -205,7 +205,7 @@ const POSIntegration: React.FC<POSIntegrationProps> = ({ restaurantId }) => {
           </div>
         </div>
         <Button onClick={handleSync} disabled={syncing || !selectedPOS}>
-          <Sync className={`h-4 w-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`h-4 w-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
           Sync Data
         </Button>
       </div>
