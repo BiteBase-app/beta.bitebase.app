@@ -53,8 +53,30 @@ class Settings(BaseSettings):
 
     # External APIs
     GOOGLE_PLACES_API_KEY: Optional[str] = None
+    GOOGLE_MAPS_API_KEY: Optional[str] = None
     YELP_API_KEY: Optional[str] = None
     CENSUS_API_KEY: Optional[str] = None
+    
+    # AWS Configuration
+    AWS_ACCESS_KEY_ID: Optional[str] = None
+    AWS_SECRET_ACCESS_KEY: Optional[str] = None
+    AWS_REGION: str = "us-east-1"
+    S3_BUCKET_NAME: str = "bitebase-intelligence-data"
+    
+    # Meta (Facebook) API
+    META_ACCESS_TOKEN: Optional[str] = None
+    META_APP_ID: Optional[str] = None
+    META_APP_SECRET: Optional[str] = None
+    
+    # POS System APIs
+    SQUARE_ACCESS_TOKEN: Optional[str] = None
+    TOAST_ACCESS_TOKEN: Optional[str] = None
+    CLOVER_ACCESS_TOKEN: Optional[str] = None
+    
+    # AI/ML Configuration
+    OPENAI_MODEL: str = "gpt-4"
+    LANGCHAIN_TRACING_V2: bool = False
+    LANGCHAIN_API_KEY: Optional[str] = None
 
     # Redis
     REDIS_HOST: str = "localhost"
